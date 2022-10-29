@@ -1,0 +1,119 @@
+﻿@page "/CrearRenglon"
+
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+@inject NavigationManager navigationManager
+@inject IHttpService http
+
+
+@*<FormRenglon renglon="renglon" onCancel="Cancelar" onValidSubmit="Grabar"/>*@
+<FormRenglon 
+             producto="producto"
+             renglon="renglon" 
+         
+    onCancel="Cancelar" onValidSubmit="Grabar"/>
+
+
+
+@code {
+    //private Factura factura = new Factura();
+    private Renglon renglon = new Renglon();
+    //private Cliente cliente = new Cliente();
+    private Producto producto = new Producto();
+
+    private async void Grabar()
+    {
+        List<Producto> productos;
+        //List<Cliente> clientes;
+        //List<Factura> facturas;
+
+        //int FacturaId = 0;
+        //int ClienteId = 0;
+        int ProductoId = 0;
+
+        //var httpRespuestaCliente = await http.Post<Cliente>("api/Cliente", cliente);
+        //if (httpRespuestaCliente.Error)
+        //{
+        //    var body = httpRespuestaCliente.HttpResponseMessage;
+        //}
+
+        //var RespuestaCliente = await http.Get<List<Cliente>>("api/Cliente");
+        //if (!RespuestaCliente.Error)
+        //{
+        //    clientes = RespuestaCliente.Respuesta;
+
+        //    foreach (var item in clientes)
+        //    {
+        //        if (item.NombreCliente == cliente.NombreCliente && item.ApellidoCliente == cliente.ApellidoCliente)
+        //        {
+        //            ClienteId = item.Id;
+        //        }
+        //    }
+        //}
+
+        //factura.ClienteId = ClienteId;
+
+        //var httpRespuestaFactura = await http.Post<Factura>("api/Factura", factura);
+        //if (httpRespuestaFactura.Error)
+        //{
+        //    var body = httpRespuestaFactura.HttpResponseMessage;
+        //}
+
+        //var RespuestaFactura= await http.Get<List<Factura>>("api/Factura");
+        //if (!RespuestaFactura.Error)
+        //{
+        //    facturas = RespuestaFactura.Respuesta;
+
+        //    foreach (var item in facturas)
+        //    {
+        //        if (item.FechaVenta == factura.FechaVenta && item.total == factura.total)
+        //        {
+        //            FacturaId = item.Id;
+        //        }
+        //    }
+        //}
+
+        var httpRespuestaProducto = await http.Post<Producto>("api/Producto", producto);
+        if (httpRespuestaProducto.Error)
+        {
+            var body = httpRespuestaProducto.HttpResponseMessage;
+        }
+
+        var RespuestaProducto= await http.Get<List<Producto>>("api/Producto");
+        if (!RespuestaProducto.Error)
+        {
+            productos = RespuestaProducto.Respuesta;
+
+            foreach (var item in productos)
+            {
+                if (item.NombreProducto == producto.NombreProducto && item.PrecioProducto == producto.PrecioProducto && item.CodigoProducto == producto.CodigoProducto && item.Stock == producto.Stock )
+                {
+                    ProductoId = item.Id;
+                }
+            }
+        }
+
+        renglon.ProductoId = ProductoId;
+        //renglon.FacturaId = FacturaId;
+        
+
+        var httpRespuestaRenglon = await http.Post<Renglon>("api/Renglon", renglon);
+        if (httpRespuestaRenglon.Error)
+        {
+            var body = httpRespuestaRenglon.HttpResponseMessage;
+        }       
+        //else
+        //{
+        //    navigationManager.NavigateTo("/Renglon");
+        //}
+    }
+
+
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Renglon");
+    }
+
+
+}

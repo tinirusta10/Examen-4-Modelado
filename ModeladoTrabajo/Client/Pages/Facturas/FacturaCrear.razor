@@ -1,0 +1,27 @@
+﻿@page "/CrearFactura"
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+@inject NavigationManager navigationManager
+@inject IHttpService http
+
+
+<FormFactura facturas="facturas" onCancel="Cancelar" onValidSubmit="Grabar"/>
+
+@code {
+     private Factura facturas = new Factura();
+
+    private async void Grabar()
+    {
+        var httpRespuesta = await http.Post<Factura>("api/Factura",facturas);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Facturas");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Facturas");
+    }
+}

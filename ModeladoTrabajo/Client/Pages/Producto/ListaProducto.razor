@@ -1,0 +1,139 @@
+﻿@page "/Producto"
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+@inject IHttpService http
+
+<h3>Lista de clientes</h3>
+
+<a class="btn btn-primary" href="/CrearProducto">Nuevo producto</a>
+<style>
+
+th, td{
+    border: solid 1px black;
+    padding:20px;
+}
+thead {
+    background-color: #545554;
+    border-bottom: 4px solid black;
+    color:white;
+}
+
+
+</style>
+
+<table>
+    <thead>
+    <tr>
+        
+        <td>Producto</td>       
+        <td>Precio</td>
+        <td>Codigo</td>
+        <td>Stock</td>
+    </tr>
+    </thead>
+    @if (productos== null)
+    {
+        <tr>Cargando...</tr>
+    }
+    else if (productos.Count== 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+      foreach (var item in productos)
+        {
+            <tr>
+
+                <td>@item.NombreProducto</td>
+               
+                <td>@item.PrecioProducto</td>
+
+                <td>@item.CodigoProducto</td>
+
+                <td>@item.Stock</td>
+
+
+                <td>
+                    <a class="btn btn-primary"
+                       href="EditarProducto/@item.Id">
+                        Editar
+                    </a>
+                </td>
+
+                <td>
+                    <button class="btn btn-warning"
+                       @onclick="()=>Eliminar(item)">
+                        Borrar
+                    </button>
+
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
+<Confirmacion @ref="confirmacion"
+              verCancelar="true"
+              verOk="true"
+              textOk="Ok"
+              Titulo="Borrar producto"
+              onCancel="Cancelar"
+              onConfirm="Borrar">
+              <div>
+                  Está por borrar el producto @productoborrar.NombreProducto 
+                  <br />
+                  ¿Quiere continuar?
+              </div>
+</Confirmacion>
+
+@code {
+    List<Producto> productos;
+    Producto productoborrar;
+    Confirmacion confirmacion;
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        await Leer();
+
+    }
+
+    private async Task Leer()
+
+    {
+
+        var respuesta = await http.Get<List<Producto>>("api/Producto");
+        
+        
+        if (!respuesta.Error)
+        {
+            productos = respuesta.Respuesta;
+        }
+
+    }
+
+    private void Eliminar(Producto borrarproducto)
+    {
+        productoborrar = borrarproducto;
+        confirmacion.Ver();
+    }
+
+        private void Cancelar()
+    {
+        confirmacion.Ocultar();
+        productoborrar = null;
+    }
+
+         private async Task Borrar()
+    {
+        var respuesta = await http.Delete($"api/Producto/{productoborrar.Id}");
+        if(respuesta.Error)
+        {
+            var body = "Error";
+        }
+        Cancelar();
+        await Leer();
+    }
+}
+

@@ -1,0 +1,189 @@
+﻿@page "/Facturas"
+@inject IHttpService http
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+
+<style>
+
+th, td{
+    border: solid 1px black;
+    padding:20px;
+}
+thead {
+    background-color: #545554;
+    border-bottom: 4px solid black;
+    color:white;
+}
+
+
+</style>
+
+<table>
+    <thead>
+    <tr>
+        <td>ID</td>
+        <td>ClienteId</td>
+        <td>FechaVenta</td>   
+        <td>Nombre</td> 
+        <td>Apellido</td> 
+        <td>Renglon</td> 
+
+ 
+       
+
+
+    </tr>
+    </thead>
+    @if (facturas== null)
+    {
+        <tr>Cargando...</tr>
+    }
+
+    else if (facturas.Count== 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+      foreach (var item in facturas)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.ClienteId</td>
+                <td>@item.FechaVenta</td> 
+                <td>@item.Cliente.NombreCliente</td>
+                <td>@item.Cliente.ApellidoCliente</td> 
+                <td>@item.Renglones</td>
+                <td>
+                    <a class="btn btn-primary"
+                       href="Editar/@item.Id">
+                        Editar
+                    </a>
+                </td>
+
+                 <td>
+                    <button class="btn btn-warning"
+                       @onclick="()=>Eliminar(item)">
+                        Borrar
+                    </button>
+                </td>
+
+            </tr>
+
+        }
+
+
+    
+    }
+</table>
+<Confirmacion @ref="confirmacion"
+              verCancelar="true"
+              verOk="true"
+              textOk="Ok"
+              Titulo="Borrar Factura"
+              onCancel="Cancelar"
+              onConfirm="Borrar">
+              <div>
+                  Está por borrar a @facturaborrar.Cliente.NombreCliente @facturaborrar.Cliente.ApellidoCliente
+                  <br />
+                  ¿Quiere continuar?
+              </div>
+</Confirmacion>
+@code {
+
+    Confirmacion confirmacion;
+    Factura facturaborrar;
+    List<Factura> facturas;
+    List<Cliente> clientes;
+    int RenglonId = 0;
+    int FacturaId = 0;
+
+    private Renglon renglon = new Renglon();
+    List<Renglon> Renglones;
+
+    private Factura factura = new Factura();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        await Leer();
+        //await Leer2();
+        await Leer3();
+
+
+
+    }
+    private async Task Leer()
+
+    {
+
+        var respuesta = await http.Get<List<Factura>>("api/Factura");
+
+
+        if (!respuesta.Error)
+        {
+            facturas =respuesta.Respuesta;
+
+            foreach (var item in facturas)
+            {
+                if (item.Renglones==factura.Renglones )
+                {
+                    RenglonId = item.Id;
+                }
+            }
+        }
+
+    }
+
+
+    private async Task Leer3()
+
+    {
+
+        var respuestaRenglon = await http.Get<List<Renglon>>("api/Renglon");
+
+
+        if (!respuestaRenglon.Error)
+        {
+            Renglones=respuestaRenglon.Respuesta;
+
+                        
+
+            foreach (var item in Renglones)
+            {
+                if (item.ProductoId== renglon.ProductoId)
+                {
+                    RenglonId = item.Id;
+                }
+            }
+        }
+
+    }
+
+    private void Eliminar(Factura borrarfactura)
+    {
+        facturaborrar = borrarfactura;
+        confirmacion.Ver();
+    }
+
+    private void Cancelar()
+    {
+        confirmacion.Ocultar();
+        facturaborrar = null;
+    }
+
+        private async Task Borrar()
+    {
+        var respuesta = await http.Delete($"api/Factura/{facturaborrar.Id}");
+        if(respuesta.Error)
+        {
+            var body = "Error";
+        }
+        Cancelar();
+        await Leer();
+    }
+    
+
+
+}

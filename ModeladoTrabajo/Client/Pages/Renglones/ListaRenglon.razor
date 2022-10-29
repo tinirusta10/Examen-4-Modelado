@@ -1,0 +1,186 @@
+﻿@page "/Renglon"
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+@inject IHttpService http
+<style>
+
+th, td{
+    border: solid 1px black;
+    padding:20px;
+}
+thead {
+    background-color: #545554;
+    border-bottom: 4px solid black;
+    color:white;
+}
+
+
+</style>
+
+<table>
+    <thead>
+    <tr>
+        <td>FacturaId</td>
+
+        <td>NombreCliente</td>
+         
+        <td>ApellidoCliente</td>
+
+        <td>Producto</td>
+         
+        <td>Precio</td>
+
+        <td>Codigo</td>
+
+        <td>Stock</td>
+
+
+    </tr>
+    </thead>
+    @if (renglones== null)
+    {
+        <tr>Cargando...</tr>
+    }
+    else if (renglones.Count== 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+      foreach (var item in renglones)
+        {
+            <tr>
+
+                <td>@item.FacturaId</td>
+
+                <td>@item.Factura.Cliente.NombreCliente</td>
+               
+                <td>@item.Factura.Cliente.ApellidoCliente</td>
+
+                <td>@item.Producto.NombreProducto</td>
+
+                <td>@item.Producto.PrecioProducto</td>
+                
+                <td>@item.Producto.CodigoProducto</td>
+
+                <td>@item.Producto.Stock</td>
+
+
+                <td>
+                    <a class="btn btn-primary"
+                       href="EditarProducto/@item.Id">
+                        Editar
+                    </a>
+                </td>
+
+                <td>
+
+                    <button class="btn btn-warning"
+                       @onclick="()=>Eliminar(item)">
+                        Borrar
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
+<Confirmacion @ref="confirmacion"
+              verCancelar="true"
+              verOk="true"
+              textOk="Ok"
+              Titulo="Borrar Renglon"
+              onCancel="Cancelar"
+              onConfirm="Borrar">
+              <div>
+                  Está por borrar @renglonborrar.Producto.NombreProducto
+                  <br />
+                  ¿Quiere continuar?
+              </div>
+</Confirmacion>
+@code {
+    List<Renglon> renglones;
+    List<Producto> productos;
+    List<Cliente> clientes;
+
+    Confirmacion confirmacion;
+    Renglon renglonborrar;
+
+        protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        await Leer();
+        await Leer2();
+        await Leer3();
+
+
+    }
+
+    private async Task Leer()
+
+    {
+
+        var respuesta = await http.Get<List<Renglon>>("api/Renglon");
+        
+        
+        if (!respuesta.Error)
+        {
+            renglones = respuesta.Respuesta;
+        }
+
+    }
+
+        private async Task Leer2()
+
+    {
+
+        var respuesta = await http.Get<List<Producto>>("api/Producto");
+        
+        
+        if (!respuesta.Error)
+        {
+            productos = respuesta.Respuesta;
+        }
+
+    }
+
+            private async Task Leer3()
+
+    {
+
+        var respuesta = await http.Get<List<Cliente>>("api/Cliente");
+        
+        
+        if (!respuesta.Error)
+        {
+            clientes = respuesta.Respuesta;
+        }
+
+    }
+
+        private void Eliminar(Renglon borrarrenglon)
+    {
+        renglonborrar = borrarrenglon;
+        confirmacion.Ver();
+    }
+
+        private void Cancelar()
+    {
+        confirmacion.Ocultar();
+        renglonborrar = null;
+    }
+
+         private async Task Borrar()
+    {
+        var respuesta = await http.Delete($"api/Renglon/{renglonborrar.Id}");
+        if(respuesta.Error)
+        {
+            var body = "Error";
+        }
+        Cancelar();
+        await Leer();
+    }
+
+
+}

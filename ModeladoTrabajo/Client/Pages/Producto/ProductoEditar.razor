@@ -1,0 +1,50 @@
+﻿@page "/EditarProducto/{productoId:int}"
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Editar producto</h3>
+
+<FormProducto producto="producto" onCancel="Cancelar" onValidSubmit="Grabar" />
+
+@code 
+{
+    private Producto producto  = new Producto();
+    [Parameter] public int productoId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<Producto>($"api/Producto/{productoId}");
+        if(respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        else
+        {
+            producto = respuesta.Respuesta;
+        }
+    }
+
+    private async void Grabar()
+    {
+        var respuesta = await http.Put<Producto>($"api/Producto/{productoId}",
+                                                     producto);
+        if (respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Producto");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Producto");
+    }
+}
+

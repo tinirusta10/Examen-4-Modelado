@@ -1,0 +1,49 @@
+﻿@page "/Editar/{clienteId:int}"
+@using BazarBD.Data.Entidades
+@using ModeladoTrabajo.Client.Servicios
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Editar Cliente</h3>
+
+<FormCliente cliente="cliente" onCancel="Cancelar" onValidSubmit="Grabar" />
+
+@code 
+{
+    private Cliente cliente  = new Cliente();
+    [Parameter] public int clienteId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<Cliente>($"api/Cliente/{clienteId}");
+        if(respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        else
+        {
+            cliente = respuesta.Respuesta;
+        }
+    }
+
+    private async void Grabar()
+    {
+        var respuesta = await http.Put<Cliente>($"api/Cliente/{clienteId}",
+                                                     cliente);
+        if (respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Cliente");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Cliente");
+    }
+}

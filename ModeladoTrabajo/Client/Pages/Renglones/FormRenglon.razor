@@ -1,0 +1,121 @@
+﻿@using BazarBD.Data.Entidades
+
+
+
+@*<EditForm Model="cliente">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+
+    <div class="form-group">
+        <label>Nombre</label>
+            <div>
+            <InputText class="form-control" @bind-Value="@cliente.NombreCliente" />
+            <ValidationMessage For="@(() => cliente.NombreCliente)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+        <label>Apellido</label>
+            <div>
+            <InputText class="form-control" @bind-Value="@cliente.ApellidoCliente" />
+            <ValidationMessage For="@(() => cliente.ApellidoCliente)" />
+            </div>
+        </div>
+    </div>
+</EditForm>*@
+
+@*<EditForm Model="factura">
+<DataAnnotationsValidator/>
+
+        <div class="form-group">
+        <label>FechaVenta</label>
+            <div>
+            <InputDate class="form-control" @bind-Value="@factura.FechaVenta" />
+            <ValidationMessage For="@(() => factura.FechaVenta)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+        <label>Total</label>
+            <div>
+            <InputNumber class="form-control" @bind-Value="@factura.total" />
+            <ValidationMessage For="@(() => factura.total)" />
+            </div>
+        </div>
+
+
+</EditForm>*@
+
+<EditForm Model="producto">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label>Nombre</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@producto.NombreProducto" />
+            <ValidationMessage For="@(() => producto.NombreProducto)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Precio</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@producto.PrecioProducto" />
+            <ValidationMessage For="@(() => producto.PrecioProducto)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Codigo</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@producto.CodigoProducto" />
+            <ValidationMessage For="@(() => producto.CodigoProducto)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Stock</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@producto.Stock" />
+            <ValidationMessage For="@(() => producto.Stock)" />
+        </div>
+    </div>
+    
+    <br/>
+
+</EditForm>
+
+<EditForm Model="renglon" OnValidSubmit="onValidSubmit" >
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        
+
+        <div class="form-group">
+        <label>IDfactura</label>
+            <div>
+            <InputNumber class="form-control" @bind-Value="@renglon.FacturaId" />
+            <ValidationMessage For="@(() => renglon.FacturaId)" />
+            </div>
+        </div>
+     
+    </div>
+
+    <br />
+
+    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
+    <a class="btn btn-primary" href="/Renglon">Ver factura</a>
+</EditForm>
+
+
+@code {
+
+    //[Parameter] public Renglon renglon { get; set; }
+       //[Parameter] public Factura factura { get; set; }
+       //[Parameter] public Cliente cliente { get; set; }
+       [Parameter] public Producto producto { get; set; }
+       [Parameter] public Renglon renglon { get; set; }
+   
+
+    [Parameter] public EventCallback onValidSubmit { get; set; }
+    [Parameter] public EventCallback onCancel { get; set; }
+}

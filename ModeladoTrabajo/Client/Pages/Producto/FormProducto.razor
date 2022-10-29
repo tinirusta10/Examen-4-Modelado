@@ -1,0 +1,46 @@
+﻿@using BazarBD.Data.Entidades
+<EditForm Model="producto" OnValidSubmit="onValidSubmit">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label>Nombre</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@producto.NombreProducto" />
+            <ValidationMessage For="@(() => producto.NombreProducto)" />
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label>Precio</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@producto.PrecioProducto" />
+            <ValidationMessage For="@(() => producto.PrecioProducto)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Codigo</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@producto.CodigoProducto" />
+            <ValidationMessage For="@(() => producto.CodigoProducto)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Stock</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@producto.Stock" />
+            <ValidationMessage For="@(() => producto.Stock)" />
+        </div>
+    </div>
+
+    <br />
+    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
+
+</EditForm>
+
+@code {
+    [Parameter] public Producto producto { get; set; }
+    [Parameter] public EventCallback onValidSubmit { get; set; }
+    [Parameter] public EventCallback onCancel { get; set; }
+}
