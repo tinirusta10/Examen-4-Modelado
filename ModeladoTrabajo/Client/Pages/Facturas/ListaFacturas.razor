@@ -18,6 +18,8 @@ thead {
 
 </style>
 
+<a class="btn btn-primary" href="/CrearFactura">Nueva Factura</a>
+
 <table>
     <thead>
     <tr>
@@ -28,9 +30,7 @@ thead {
         <td>Apellido</td> 
         <td>Renglon</td> 
 
- 
-       
-
+     
 
     </tr>
     </thead>
@@ -56,14 +56,14 @@ thead {
                 <td>@item.Renglones</td>
                 <td>
                     <a class="btn btn-primary"
-                       href="Editar/@item.Id">
+                       href="Editar/@item.Cliente.Id">
                         Editar
                     </a>
                 </td>
 
                  <td>
                     <button class="btn btn-warning"
-                       @onclick="()=>Eliminar(item)">
+                       @onclick="()=>Eliminar(item.Cliente)">
                         Borrar
                     </button>
                 </td>
@@ -84,7 +84,7 @@ thead {
               onCancel="Cancelar"
               onConfirm="Borrar">
               <div>
-                  Está por borrar a @facturaborrar.Cliente.NombreCliente @facturaborrar.Cliente.ApellidoCliente
+                  Está por borrar a @clienteborrar.NombreCliente @clienteborrar.ApellidoCliente
                   <br />
                   ¿Quiere continuar?
               </div>
@@ -92,7 +92,7 @@ thead {
 @code {
 
     Confirmacion confirmacion;
-    Factura facturaborrar;
+    Cliente clienteborrar;
     List<Factura> facturas;
     List<Cliente> clientes;
     int RenglonId = 0;
@@ -161,21 +161,21 @@ thead {
 
     }
 
-    private void Eliminar(Factura borrarfactura)
+    private void Eliminar(Cliente borrarcliente)
     {
-        facturaborrar = borrarfactura;
+        clienteborrar = borrarcliente;
         confirmacion.Ver();
     }
 
     private void Cancelar()
     {
         confirmacion.Ocultar();
-        facturaborrar = null;
+        clienteborrar = null;
     }
 
         private async Task Borrar()
     {
-        var respuesta = await http.Delete($"api/Factura/{facturaborrar.Id}");
+        var respuesta = await http.Delete($"api/Cliente/{clienteborrar.Id}");
         if(respuesta.Error)
         {
             var body = "Error";

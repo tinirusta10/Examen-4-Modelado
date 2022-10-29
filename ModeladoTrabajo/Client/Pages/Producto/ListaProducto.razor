@@ -5,7 +5,7 @@
 
 <h3>Lista de clientes</h3>
 
-<a class="btn btn-primary" href="/CrearProducto">Nuevo producto</a>
+@*<a class="btn btn-primary" href="/CrearProducto">Nuevo producto</a>*@
 <style>
 
 th, td{
@@ -52,29 +52,30 @@ thead {
                 <td>@item.CodigoProducto</td>
 
                 <td>@item.Stock</td>
+               
 
 
-                <td>
+@*                <td>
                     <a class="btn btn-primary"
                        href="EditarProducto/@item.Id">
                         Editar
                     </a>
-                </td>
+                </td>*@
 
-                <td>
+@*                <td>
                     <button class="btn btn-warning"
                        @onclick="()=>Eliminar(item)">
                         Borrar
                     </button>
 
-                </td>
+                </td>*@
             </tr>
         }
     }
 
 </table>
 
-<Confirmacion @ref="confirmacion"
+@*<Confirmacion @ref="confirmacion"
               verCancelar="true"
               verOk="true"
               textOk="Ok"
@@ -86,11 +87,11 @@ thead {
                   <br />
                   ¿Quiere continuar?
               </div>
-</Confirmacion>
+</Confirmacion>*@
 
 @code {
     List<Producto> productos;
-    Producto productoborrar;
+    //Producto productoborrar;
     Confirmacion confirmacion;
     protected override async Task OnInitializedAsync()
     {
@@ -113,27 +114,27 @@ thead {
 
     }
 
-    private void Eliminar(Producto borrarproducto)
-    {
-        productoborrar = borrarproducto;
-        confirmacion.Ver();
-    }
+    //private void Eliminar(Producto borrarproducto)
+    //{
+    //    productoborrar = borrarproducto;
+    //    confirmacion.Ver();
+    //}
 
-        private void Cancelar()
-    {
-        confirmacion.Ocultar();
-        productoborrar = null;
-    }
+    //    private void Cancelar()
+    //{
+    //    confirmacion.Ocultar();
+    //    productoborrar = null;
+    //}
 
-         private async Task Borrar()
-    {
-        var respuesta = await http.Delete($"api/Producto/{productoborrar.Id}");
-        if(respuesta.Error)
-        {
-            var body = "Error";
-        }
-        Cancelar();
-        await Leer();
-    }
+    //     private async Task Borrar()
+    //{
+    //    var respuesta = await http.Delete($"api/Producto/{productoborrar.Id}");
+    //    if(respuesta.Error)
+    //    {
+    //        var body = "Error";
+    //    }
+    //    Cancelar();
+    //    await Leer();
+    //}
 }
 

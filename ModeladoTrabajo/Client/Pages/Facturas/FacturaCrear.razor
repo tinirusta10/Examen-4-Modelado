@@ -5,23 +5,75 @@
 @inject IHttpService http
 
 
-<FormFactura facturas="facturas" onCancel="Cancelar" onValidSubmit="Grabar"/>
+<FormFactura cliente="cliente"
+               facturas="factura"
+
+    onCancel="Cancelar" onValidSubmit="Grabar"/>
 
 @code {
-     private Factura facturas = new Factura();
+    private Cliente cliente = new Cliente();
+    private Factura factura = new Factura();
+
+
+
 
     private async void Grabar()
     {
-        var httpRespuesta = await http.Post<Factura>("api/Factura",facturas);
-        if (httpRespuesta.Error)
+        List<Cliente> Clientes;
+        List<Factura> Facturas; 
+        int FacturaId = 0;
+        int ClienteId = 0;
+
+        var httpRespuestaCliente = await http.Post<Cliente>("api/Cliente", cliente);
+        if (httpRespuestaCliente.Error)
         {
-            var body = httpRespuesta.HttpResponseMessage;
+            var body = httpRespuestaCliente.HttpResponseMessage;
         }
-        navigationManager.NavigateTo("/Facturas");
+        var RespuestaCliente = await http.Get<List<Cliente>>("api/Cliente");
+        if (!RespuestaCliente.Error)
+        {
+            Clientes = RespuestaCliente.Respuesta;
+
+            foreach (var item in Clientes)
+            {
+                if (item.NombreCliente == cliente.NombreCliente && item.ApellidoCliente == cliente.ApellidoCliente)
+                {
+                    ClienteId = item.Id;
+                }
+            }
+        }   
+
+        factura.ClienteId = ClienteId;
+
+        var httpRespuestaFactura = await http.Post<Factura>("api/Factura",factura);
+        if (httpRespuestaFactura.Error)
+        {
+            var body = httpRespuestaFactura.HttpResponseMessage;
+        }
+        var RespuestaFactura= await http.Get<List<Factura>>("api/Factura");
+        if (!RespuestaFactura.Error)
+        {
+            Facturas = RespuestaFactura.Respuesta;
+
+            foreach (var item in Facturas)
+            {
+                if (item.FechaVenta == factura.FechaVenta)
+                {
+                    FacturaId = item.Id;
+                }
+                else
+                {
+                navigationManager.NavigateTo("/Facturas");
+                }
+            }
+        
+
     }
 
-    private void Cancelar()
-    {
+  
+}
+        private void Cancelar()
+        {
         navigationManager.NavigateTo("/Facturas");
-    }
+        }
 }

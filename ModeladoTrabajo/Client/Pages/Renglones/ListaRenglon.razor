@@ -17,6 +17,8 @@ thead {
 
 </style>
 
+<a class="btn btn-primary" href="/CrearRenglon">Nuevo Renglon</a>
+
 <table>
     <thead>
     <tr>
@@ -68,7 +70,7 @@ thead {
 
                 <td>
                     <a class="btn btn-primary"
-                       href="EditarProducto/@item.Id">
+                       href="EditarProducto/@item.Producto.Id">
                         Editar
                     </a>
                 </td>
@@ -76,7 +78,8 @@ thead {
                 <td>
 
                     <button class="btn btn-warning"
-                       @onclick="()=>Eliminar(item)">
+                       @onclick="()=>Eliminar(item.Producto)">
+                       
                         Borrar
                     </button>
                 </td>
@@ -94,7 +97,7 @@ thead {
               onCancel="Cancelar"
               onConfirm="Borrar">
               <div>
-                  Está por borrar @renglonborrar.Producto.NombreProducto
+                  Está por borrar @productoborrar.NombreProducto
                   <br />
                   ¿Quiere continuar?
               </div>
@@ -105,9 +108,9 @@ thead {
     List<Cliente> clientes;
 
     Confirmacion confirmacion;
-    Renglon renglonborrar;
+    Producto productoborrar;
 
-        protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitializedAsync();
         await Leer();
@@ -122,8 +125,8 @@ thead {
     {
 
         var respuesta = await http.Get<List<Renglon>>("api/Renglon");
-        
-        
+
+
         if (!respuesta.Error)
         {
             renglones = respuesta.Respuesta;
@@ -131,13 +134,13 @@ thead {
 
     }
 
-        private async Task Leer2()
+    private async Task Leer2()
 
     {
 
         var respuesta = await http.Get<List<Producto>>("api/Producto");
-        
-        
+
+
         if (!respuesta.Error)
         {
             productos = respuesta.Respuesta;
@@ -145,13 +148,13 @@ thead {
 
     }
 
-            private async Task Leer3()
+    private async Task Leer3()
 
     {
 
         var respuesta = await http.Get<List<Cliente>>("api/Cliente");
-        
-        
+
+
         if (!respuesta.Error)
         {
             clientes = respuesta.Respuesta;
@@ -159,22 +162,26 @@ thead {
 
     }
 
-        private void Eliminar(Renglon borrarrenglon)
+    private void Eliminar(Producto borrarproducto)
     {
-        renglonborrar = borrarrenglon;
+        productoborrar = borrarproducto;
         confirmacion.Ver();
     }
+
+ 
+
+
 
         private void Cancelar()
     {
         confirmacion.Ocultar();
-        renglonborrar = null;
+        productoborrar = null;
     }
 
          private async Task Borrar()
     {
-        var respuesta = await http.Delete($"api/Renglon/{renglonborrar.Id}");
-        if(respuesta.Error)
+        var respuestaRenglon = await http.Delete($"api/Producto/{productoborrar.Id}");
+        if(respuestaRenglon.Error)
         {
             var body = "Error";
         }

@@ -32,19 +32,22 @@
     }
 
     private async void Grabar()
+
     {
         var respuesta = await http.Put<Producto>($"api/Producto/{productoId}",
                                                      producto);
         if (respuesta.Error)
         {
             var body = respuesta.HttpResponseMessage;
+
+
         }
-        navigationManager.NavigateTo("/Producto");
+        navigationManager.NavigateTo("/Renglon");
     }
 
     private void Cancelar()
     {
-        navigationManager.NavigateTo("/Producto");
+        navigationManager.NavigateTo("/Renglon");
     }
 }
 

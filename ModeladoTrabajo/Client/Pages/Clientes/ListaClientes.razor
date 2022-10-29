@@ -5,7 +5,7 @@
 
 
 
-<a class="btn btn-primary" href="/CrearCliente">Nuevo cliente</a>
+@*<a class="btn btn-primary" href="/CrearCliente">Nuevo cliente</a>*@
 <style>
 
 th, td{
@@ -51,25 +51,25 @@ thead {
                 <td>@item.ApellidoCliente</td>
 
                 
-                <td>
+@*                <td>
                     <a class="btn btn-primary"
-                       href="Editar/@item.Id">
+                       href="Facturas/@item.Id">
                         Editar
                     </a>
                 </td>
-
-                  <td>
+*@
+                @*  <td>
                     <button class="btn btn-warning"
                        @onclick="()=>Eliminar(item)">
                         Borrar
                     </button>
-                </td>
+                </td>*@
             </tr>
         }
     }
 
 </table>
-<Confirmacion @ref="confirmacion"
+@*<Confirmacion @ref="confirmacion"
               verCancelar="true"
               verOk="true"
               textOk="Ok"
@@ -81,7 +81,7 @@ thead {
                   <br />
                   ¿Quiere continuar?
               </div>
-</Confirmacion>
+</Confirmacion>*@
 
 
 
@@ -89,7 +89,7 @@ thead {
     List<Cliente> clientes;
 
     Confirmacion confirmacion;
-    Cliente clienteborrar;
+    //Cliente clienteborrar;
     protected override async Task OnInitializedAsync()
     {
         base.OnInitializedAsync();
@@ -113,26 +113,26 @@ thead {
 
 
 
-     private void Eliminar(Cliente borrarcliente)
-    {
-        clienteborrar = borrarcliente;
-        confirmacion.Ver();
-    }
+    // private void Eliminar(Cliente borrarcliente)
+    //{
+    //    clienteborrar = borrarcliente;
+    //    confirmacion.Ver();
+    //}
 
-    private void Cancelar()
-    {
-        confirmacion.Ocultar();
-        clienteborrar = null;
-    }
+    //private void Cancelar()
+    //{
+    //    confirmacion.Ocultar();
+    //    clienteborrar = null;
+    //}
 
-    private async Task Borrar()
-    {
-        var respuesta = await http.Delete($"api/Cliente/{clienteborrar.Id}");
-        if(respuesta.Error)
-        {
-            var body = "Error";
-        }
-        Cancelar();
-        await Leer();
-    }
+    //private async Task Borrar()
+    //{
+    //    var respuesta = await http.Delete($"api/Cliente/{clienteborrar.Id}");
+    //    if(respuesta.Error)
+    //    {
+    //        var body = "Error";
+    //    }
+    //    Cancelar();
+    //    await Leer();
+    //}
 }

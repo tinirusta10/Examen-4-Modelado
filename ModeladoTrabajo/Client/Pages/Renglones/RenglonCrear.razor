@@ -75,7 +75,7 @@
 
         var httpRespuestaProducto = await http.Post<Producto>("api/Producto", producto);
         if (httpRespuestaProducto.Error)
-        {
+        {   
             var body = httpRespuestaProducto.HttpResponseMessage;
         }
 
